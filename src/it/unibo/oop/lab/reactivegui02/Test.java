@@ -1,11 +1,17 @@
 package it.unibo.oop.lab.reactivegui02;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 /**
  * Exercise on a reactive GUI.
  */
 public final class Test {
 
     private Test() {
+        
     }
 
     /*
@@ -31,6 +37,7 @@ public final class Test {
      * deve essere volatile? - la disabilitazione dei pulsanti sia realizzata
      * col metodo setEnabled
      */
+    
 
     /**
      * 
@@ -39,6 +46,6 @@ public final class Test {
      * 
      */
     public static void main(final String... args) {
-        // new ConcurrentGUI();
+        var gui = new ConcurrentGUI();
     }
 }

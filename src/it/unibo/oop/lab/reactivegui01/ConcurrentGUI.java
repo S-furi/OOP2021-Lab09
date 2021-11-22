@@ -6,6 +6,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -78,33 +80,22 @@ public final class ConcurrentGUI extends JFrame {
          * 
          */
         private volatile boolean stop;
-        private volatile int counter;
+        private int counter;
 
         @Override
         public void run() {
             while (!this.stop) {
                 try {
-                    /*
-                     * All the operations on the GUI must be performed by the
-                     * Event-Dispatch Thread (EDT)!
-                     */
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        @Override
-                        public void run() {
-                            // This will happen in the EDT: since i'm reading counter it needs to be volatile.
-                            ConcurrentGUI.this.display.setText(Integer.toString(Agent.this.counter));
-                        }
-                    });
-                    /*
-                     * SpotBugs shows a warning because the increment of a volatile variable is not atomic,
-                     * so the concurrent access is potentially not safe. In the specific case of this exercise,
-                     * we do synchronization with invokeAndWait, so it can be ignored.
-                     *
-                     * EXERCISE: Can you think of a solution that doesn't require counter to be volatile?
-                     */
-                    this.counter++;
+                    final ReentrantLock lock = new ReentrantLock();
+                    try {
+                        lock.lock();
+                        this.counter++;
+                        ConcurrentGUI.this.display.setText(Integer.toString(this.counter));
+                    } finally {
+                        lock.unlock();
+                    }
                     Thread.sleep(100);
-                } catch (InvocationTargetException | InterruptedException ex) {
+                } catch (InterruptedException ex) {
                     /*
                      * This is just a stack trace print, in a real program there
                      * should be some logging and decent error reporting

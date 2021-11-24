@@ -86,14 +86,10 @@ public final class ConcurrentGUI extends JFrame {
         public void run() {
             while (!this.stop) {
                 try {
-                    final ReentrantLock lock = new ReentrantLock();
-                    try {
-                        lock.lock();
-                        this.counter++;
-                        ConcurrentGUI.this.display.setText(Integer.toString(this.counter));
-                    } finally {
-                        lock.unlock();
-                    }
+                    int value = this.counter;
+                    value++;
+                    this.counter = value;
+                    ConcurrentGUI.this.display.setText(Integer.toString(this.counter));
                     Thread.sleep(100);
                 } catch (InterruptedException ex) {
                     /*

@@ -64,7 +64,7 @@ public class ConcurrentGUI {
         this.frame.setVisible(true);
     }
     
-    private class Agent implements Runnable {
+    public class Agent implements Runnable {
         
         private boolean stop = false;
         private int count = 0;

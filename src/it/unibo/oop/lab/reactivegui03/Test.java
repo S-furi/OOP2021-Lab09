@@ -5,7 +5,7 @@ package it.unibo.oop.lab.reactivegui03;
  *
  */
 public final class Test {
-
+    
     private Test() {
     }
 
@@ -28,6 +28,6 @@ public final class Test {
      * 
      */
     public static void main(final String... args) {
-        // new AnotherConcurrentGUI();
+        final AnotherReactiveGUI gui = new AnotherReactiveGUI();
     }
 }

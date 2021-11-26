@@ -13,6 +13,9 @@ public class MultiThreadedSumMatrix implements SumMatrix {
 
     @Override
     public double sum(final double[][] matrix) {
+        /**
+         * Numbers of how many rows every thread will work with.
+         */
         final int partition = matrix.length / this.nthread + matrix.length % this.nthread;
         
         final List<Worker> workers = new ArrayList<>(this.nthread);
@@ -44,10 +47,28 @@ public class MultiThreadedSumMatrix implements SumMatrix {
         private final int nrows;
         private double res;
         
+        /**
+         * Constructor that defines a worker and its data structure (a
+         * matrix sliced from the original with the same amount of cols 
+         * and n rows calculated from the number of threads).
+         * 
+         * 
+         * @param matrix
+         *          the matrix to slice
+         * @param start
+         *          starting row to work with
+         * @param nrows
+         *          range of n rows to work with
+         */
         Worker(final double[][] matrix, final int start, final int nrows) {
             super();
             int row = 0;
             this.matrix = new double[nrows][matrix[0].length];
+
+            /**
+             * Control for not going out of bounds with the last
+             * thread when threadNum is > 3.
+             */
             if (start + nrows > matrix.length) {
                 this.nrows = matrix.length - start;
             } else {
@@ -62,6 +83,9 @@ public class MultiThreadedSumMatrix implements SumMatrix {
             this.start = start;
         }
         
+        /**
+         * Very slow process, but it gets the job done.
+         */
         @Override
         public void run() {
             for(int i = 0; i < this.nrows; i++) {
@@ -71,6 +95,11 @@ public class MultiThreadedSumMatrix implements SumMatrix {
             }
         }
         
+        /**
+         * 
+         * @return sum
+         *          sum of all the elements of the matrix
+         */
         public double getRes() {
             return this.res;
         }
